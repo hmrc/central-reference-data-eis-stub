@@ -20,8 +20,14 @@ import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 
+import java.io.StringReader
 import javax.inject.{Inject, Singleton}
+import javax.xml.XMLConstants
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.SchemaFactory
 import scala.concurrent.Future
+import scala.util.{Success, Try}
 import scala.xml.NodeSeq
 
 @Singleton
@@ -29,13 +35,40 @@ class InboundController @Inject()(cc: ControllerComponents)
   extends BackendController(cc):
 
   private val FileIncludedHeader = "x-files-included"
+  private val RequiredContentType = "application/xml"
 
-
-    def submit(): Action[NodeSeq] =  Action.async(parse.xml) { implicit request =>
-      if request.headers.get(FileIncludedHeader).contains("true") then
-
-        Future.successful(Accepted)
-      else
-        Future.successful(BadRequest)
+    def submit(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
+      Future.successful(
+        if validateHeaders(request.headers) then
+          if validateRequestBody(request.body) then
+            expectedReturnValue(request.body)
+          else
+            BadRequest
+        else
+          BadRequest
+      )
     }
+
+    private def validateHeaders(headers: Headers): Boolean =
+      (headers.get(ACCEPT), headers.get(CONTENT_TYPE)) match
+        case (Some(RequiredContentType), Some(RequiredContentType)) => true
+        case _ => false
+
+    private def validateRequestBody(body: NodeSeq) =
+      Try {
+        val factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+        val xsd = getClass.getResourceAsStream("/schemas/csrd120main-v1.xsd")
+        val schema = factory.newSchema(new StreamSource(xsd))
+        val validator = schema.newValidator()
+        validator.validate(new StreamSource(new StringReader(body.toString)))
+      } match {
+        case Success(_) => true
+        case _ => false
+      }
+
+    private def expectedReturnValue(body: NodeSeq): Result =
+      (body \\ "TaskIdentifier").text match {
+        case notFound if notFound.endsWith("404") => NotFound
+        case _ => Accepted
+      }
 
