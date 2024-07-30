@@ -37,38 +37,38 @@ class InboundController @Inject()(cc: ControllerComponents)
   private val FileIncludedHeader = "x-files-included"
   private val RequiredContentType = "application/xml"
 
-    def submit(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
-      Future.successful(
-        if validateHeaders(request.headers) then
-          if validateRequestBody(request.body) then
-            expectedReturnValue(request.body)
-          else
-            BadRequest
-        else
-          BadRequest
-      )
+  def submit(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
+    Future.successful(
+      if validateHeaders(request.headers) && validateRequestBody(request.body) then
+        expectedReturnValue(request.body)
+      else
+        BadRequest
+    )
+  }
+
+  private def validateHeaders(headers: Headers): Boolean =
+    (headers.get(ACCEPT), headers.get(CONTENT_TYPE)) match
+      case (Some(RequiredContentType), Some(RequiredContentType)) => true
+      case _ => false
+
+  private def validateRequestBody(body: NodeSeq) =
+    Try {
+      val factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+      val xsd = getClass.getResourceAsStream("/schemas/csrd120main-v1.xsd")
+      val schema = factory.newSchema(new StreamSource(xsd))
+      val validator = schema.newValidator()
+      validator.validate(new StreamSource(new StringReader(body.toString)))
+    } match {
+      case Success(_) => true
+      case _ => false
     }
 
-    private def validateHeaders(headers: Headers): Boolean =
-      (headers.get(ACCEPT), headers.get(CONTENT_TYPE)) match
-        case (Some(RequiredContentType), Some(RequiredContentType)) => true
-        case _ => false
-
-    private def validateRequestBody(body: NodeSeq) =
-      Try {
-        val factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-        val xsd = getClass.getResourceAsStream("/schemas/csrd120main-v1.xsd")
-        val schema = factory.newSchema(new StreamSource(xsd))
-        val validator = schema.newValidator()
-        validator.validate(new StreamSource(new StringReader(body.toString)))
-      } match {
-        case Success(_) => true
-        case _ => false
-      }
-
-    private def expectedReturnValue(body: NodeSeq): Result =
-      (body \\ "TaskIdentifier").text match {
-        case notFound if notFound.endsWith("404") => NotFound
-        case _ => Accepted
-      }
+  private def expectedReturnValue(body: NodeSeq): Result =
+    (body \\ "TaskIdentifier").text match {
+      case nullResponse if nullResponse.endsWith("402") => PaymentRequired
+      case notFound if notFound.endsWith("404") => NotFound
+      case serviceUnavailable if serviceUnavailable.endsWith("503") => ServiceUnavailable
+      case gatewayTimeout if gatewayTimeout.endsWith("504") => GatewayTimeout
+      case _ => Accepted
+    }
 

@@ -40,6 +40,16 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
     </Body>
   </MainMessage>
 
+  private val invalid402TestBody: scala.xml.Elem = <MainMessage>
+    <Body>
+      <TaskIdentifier>780402</TaskIdentifier>
+      <AttributeName>ReferenceData</AttributeName>
+      <MessageType>gZip</MessageType>
+      <IncludedBinaryObject>c04a1612-705d-4373-8840-9d137b14b30a</IncludedBinaryObject>
+      <MessageSender>CS/RD2</MessageSender>
+    </Body>
+  </MainMessage>
+  
   private val invalid404TestBody: scala.xml.Elem = <MainMessage>
     <Body>
       <TaskIdentifier>780404</TaskIdentifier>
@@ -151,6 +161,18 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       status(result) shouldBe BAD_REQUEST
     }
 
+    "return null response if the task id ends with 402 to simulate this return code" in {
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml"
+          )
+          .withBody(invalid402TestBody)
+      )
+      status(result) shouldBe PAYMENT_REQUIRED
+    }
+    
     "return not found if the task id ends with 404 to simulate this return code" in {
       val result = controller.submit()(
         fakeRequest
@@ -162,4 +184,29 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       )
       status(result) shouldBe NOT_FOUND
     }
+
+    "return service unavailable if the task id ends with 503 to simulate this return code" in {
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml"
+          )
+          .withBody(invalid503TestBody)
+      )
+      status(result) shouldBe SERVICE_UNAVAILABLE
+    }
+
+    "return gateway timeout if the task id ends with 504 to simulate this return code" in {
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml"
+          )
+          .withBody(invalid504TestBody)
+      )
+      status(result) shouldBe GATEWAY_TIMEOUT
+    }
+
   }
