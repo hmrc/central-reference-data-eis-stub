@@ -42,6 +42,7 @@ class InboundController @Inject()(cc: ControllerComponents)
       if validateHeaders(request.headers) && validateRequestBody(request.body) then
         expectedReturnValue(request.body)
       else
+        // this line handles the 400 bad request stub
         BadRequest
     )
   }
