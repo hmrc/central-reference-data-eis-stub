@@ -59,8 +59,9 @@ class InboundControllerISpec
           .url(s"$baseUrl/central-reference-data-eis-stub/services/crdl/referencedataupdate/v1")
           .withHttpHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml", 
+            HeaderNames.CONTENT_TYPE -> "application/xml",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
+
           )
           .post(validTestBody.toString)
           .futureValue
