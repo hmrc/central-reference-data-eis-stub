@@ -20,14 +20,17 @@ import org.apache.pekko.stream.Materializer
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.http
 import play.api.http.HeaderNames
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.centralreferencedataeisstub.config.AppConfig
 
 class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
 
   private val fakeRequest = FakeRequest("GET", "/")
-  private val controller = new InboundController(Helpers.stubControllerComponents())
+  private val appConfig = app.injector.instanceOf[AppConfig]
+  private val controller = new InboundController(appConfig,Helpers.stubControllerComponents())
   given mat: Materializer = app.injector.instanceOf[Materializer]
 
   private val validTestBody: scala.xml.Elem = <MainMessage>
@@ -96,7 +99,9 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
+
           )
           .withBody(validTestBody)
       )
@@ -107,7 +112,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
       )
@@ -119,7 +125,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/text",
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
       )
@@ -130,7 +137,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml"
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
       )
@@ -142,7 +150,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/text"
+            HeaderNames.CONTENT_TYPE -> "application/text",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
       )
@@ -154,7 +163,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalidTestBody)
       )
@@ -166,7 +176,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalid402TestBody)
       )
@@ -178,7 +189,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalid404TestBody)
       )
@@ -190,7 +202,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalid503TestBody)
       )
@@ -202,11 +215,38 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalid504TestBody)
       )
       status(result) shouldBe GATEWAY_TIMEOUT
+    }
+    "return unauthorized if bearer token is not present " in {
+
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml"
+          )
+          .withBody(validTestBody)
+      )
+      status(result) shouldBe UNAUTHORIZED
+    }
+
+    "return unauthorized if bearer token is incorrect " in {
+
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.AUTHORIZATION -> "incorrect"
+          )
+          .withBody(validTestBody)
+      )
+      status(result) shouldBe UNAUTHORIZED
     }
 
   }
