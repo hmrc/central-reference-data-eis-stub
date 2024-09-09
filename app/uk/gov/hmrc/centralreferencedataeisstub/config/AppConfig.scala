@@ -23,3 +23,4 @@ import play.api.Configuration
 class AppConfig @Inject()(config: Configuration):
 
   val appName: String = config.get[String]("appName")
+  val bearerToken:String = config.get[String]("tokens.bearer-token")

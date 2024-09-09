@@ -19,11 +19,11 @@ package uk.gov.hmrc.centralreferencedataeisstub.controllers
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import uk.gov.hmrc.centralreferencedataeisstub.config.AppConfig
 
 import java.io.StringReader
 import javax.inject.{Inject, Singleton}
 import javax.xml.XMLConstants
-import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.SchemaFactory
 import scala.concurrent.Future
@@ -31,7 +31,7 @@ import scala.util.{Success, Try}
 import scala.xml.NodeSeq
 
 @Singleton
-class InboundController @Inject()(cc: ControllerComponents)
+class InboundController @Inject()(appConfig:AppConfig, cc: ControllerComponents)
   extends BackendController(cc):
 
   private val FileIncludedHeader = "x-files-included"
@@ -39,11 +39,14 @@ class InboundController @Inject()(cc: ControllerComponents)
 
   def submit(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
     Future.successful(
-      if validateHeaders(request.headers) && validateRequestBody(request.body) then
-        expectedReturnValue(request.body)
+      if validateBearerToken(request.headers) then
+        if validateHeaders(request.headers) && validateRequestBody(request.body) then
+          expectedReturnValue(request.body)
+        else
+          // this line handles the 400 bad request stub
+          BadRequest
       else
-        // this line handles the 400 bad request stub
-        BadRequest
+        Unauthorized
     )
   }
 
@@ -51,6 +54,9 @@ class InboundController @Inject()(cc: ControllerComponents)
     (headers.get(ACCEPT), headers.get(CONTENT_TYPE)) match
       case (Some(RequiredContentType), Some(RequiredContentType)) => true
       case _ => false
+
+  private def validateBearerToken(headers:Headers): Boolean = 
+    headers.get(AUTHORIZATION).getOrElse(UNAUTHORIZED) == appConfig.bearerToken
 
   private def validateRequestBody(body: NodeSeq) =
     Try {
