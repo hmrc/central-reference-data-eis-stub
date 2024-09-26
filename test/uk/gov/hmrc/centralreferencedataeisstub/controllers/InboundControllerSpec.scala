@@ -99,7 +99,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
 
           )
@@ -112,7 +112,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
@@ -125,7 +125,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/text",
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
@@ -145,7 +145,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       status(result) shouldBe BAD_REQUEST
     }
 
-    "return bad request if content type header is not application/xml" in {
+    "return bad request if content type header is not application/xml;charset=UTF-8" in {
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
@@ -163,7 +163,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalidTestBody)
@@ -176,7 +176,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalid402TestBody)
@@ -189,7 +189,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalid404TestBody)
@@ -202,7 +202,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalid503TestBody)
@@ -215,7 +215,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalid504TestBody)
@@ -228,7 +228,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml"
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8"
           )
           .withBody(validTestBody)
       )
@@ -241,7 +241,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> "incorrect"
           )
           .withBody(validTestBody)
