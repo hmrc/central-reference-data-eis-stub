@@ -99,9 +99,11 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
-
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            "X-Correlation-Id" -> "some-correlation-id",
+            HeaderNames.DATE -> "some-date"
           )
           .withBody(validTestBody)
       )
@@ -112,7 +114,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
@@ -125,7 +127,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/text",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
@@ -158,12 +160,73 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       status(result) shouldBe BAD_REQUEST
     }
 
+    "return bad request if x-forwarded-host header is not present" in {
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            "X-Correlation-Id" -> "some-correlation-id",
+            HeaderNames.DATE -> "some-date"
+          )
+          .withBody(validTestBody)
+      )
+      status(result) shouldBe BAD_REQUEST
+    }
+
+    "return bad request if x-correlation-id header is not present" in {
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            HeaderNames.DATE -> "some-date"
+          )
+          .withBody(validTestBody)
+      )
+      status(result) shouldBe BAD_REQUEST
+    }
+
+    "return bad request if date header is not present" in {
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            "X-Correlation-Id" -> "some-correlation-id"
+          )
+          .withBody(validTestBody)
+      )
+      status(result) shouldBe BAD_REQUEST
+    }
+
+    "return accepted if all required headers are present and valid" in {
+      val result = controller.submit()(
+        fakeRequest
+          .withHeaders(
+            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            "X-Correlation-Id" -> "some-correlation-id",
+            HeaderNames.DATE -> "some-date"
+          )
+          .withBody(validTestBody)
+      )
+      status(result) shouldBe ACCEPTED
+    }
+
     "return bad request if the xml body provided does not match the schema" in {
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalidTestBody)
@@ -176,8 +239,11 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            "X-Correlation-Id" -> "some-correlation-id",
+            HeaderNames.DATE -> "some-date"
           )
           .withBody(invalid402TestBody)
       )
@@ -189,8 +255,11 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            "X-Correlation-Id" -> "some-correlation-id",
+            HeaderNames.DATE -> "some-date"
           )
           .withBody(invalid404TestBody)
       )
@@ -202,8 +271,11 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            "X-Correlation-Id" -> "some-correlation-id",
+            HeaderNames.DATE -> "some-date"
           )
           .withBody(invalid503TestBody)
       )
@@ -215,8 +287,11 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            "X-Correlation-Id" -> "some-correlation-id",
+            HeaderNames.DATE -> "some-date"
           )
           .withBody(invalid504TestBody)
       )
@@ -228,7 +303,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8"
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8"
           )
           .withBody(validTestBody)
       )
@@ -241,7 +316,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
+            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> "incorrect"
           )
           .withBody(validTestBody)

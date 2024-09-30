@@ -35,7 +35,7 @@ class InboundController @Inject()(appConfig:AppConfig, cc: ControllerComponents)
   extends BackendController(cc):
 
   private val RequiredAccept = "application/xml"
-  private val RequiredContentType = "application/xml;charset=UTF-8"
+  private val RequiredContentType = "application/xml; charset=UTF-8"
 
   def submit(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
     Future.successful(
@@ -53,9 +53,7 @@ class InboundController @Inject()(appConfig:AppConfig, cc: ControllerComponents)
   private def validateHeaders(headers: Headers): Boolean =
     (headers.get(ACCEPT), headers.get(CONTENT_TYPE), headers.get(X_FORWARDED_HOST), headers.get("X-Correlation-Id"), headers.get(DATE)) match
       case (Some(RequiredAccept), Some(RequiredContentType), Some(_), Some(_), Some(_)) => true
-      case a@_ =>
-        println(s"GOT HERE FAILED BECAUSE OF HEADERS $a")
-        false
+      case a@_ => false
 
   private def validateBearerToken(headers:Headers): Boolean = 
     headers.get(AUTHORIZATION).getOrElse(UNAUTHORIZED) == appConfig.bearerToken

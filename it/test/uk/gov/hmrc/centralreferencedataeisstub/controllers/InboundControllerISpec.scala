@@ -61,10 +61,9 @@ class InboundControllerISpec
             HeaderNames.ACCEPT -> "application/xml",
             HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
-            HeaderNames.X_FORWARDED_HOST -> "test",
-            "X-Correlation-Id" -> "test",
-            HeaderNames.DATE -> "Wed, 11 Oct 2024 11:20:25 UTC",
-
+            HeaderNames.X_FORWARDED_HOST -> "some-host",
+            "X-Correlation-Id" -> "some-correlation-id",
+            HeaderNames.DATE -> "some-date"
           )
           .post(validTestBody.toString)
           .futureValue
