@@ -16,7 +16,7 @@ The Central Reference Data Inbound Orchestrator responsibilities:
 
 | Path - internal routes prefixed by `/central-reference-data-eis-stub` | Supported Methods | Type     | Description                                                                |
 |----------------------------------------------------------------------|-------------------|----------|----------------------------------------------------------------------------|
-| `/services/crdl/referencedataupdate/v1`                              | POST              | Internal | Simulates EIS CSRD120 endpoint. |
+| `/csrd/referencedataupdate/v1`                              | POST              | Internal | Simulates EIS CSRD120 endpoint. |
 
 ### License
 
