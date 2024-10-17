@@ -56,7 +56,7 @@ class InboundControllerISpec
     "respond with 202 status" in {
       val response =
         wsClient
-          .url(s"$baseUrl/central-reference-data-eis-stub/csrd/referencedataupdate/v1")
+          .url(s"$baseUrl/central-reference-data-eis-stub/services/csrd/referencedataupdate/v1")
           .withHttpHeaders(
             HeaderNames.ACCEPT -> "application/xml",
             HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
