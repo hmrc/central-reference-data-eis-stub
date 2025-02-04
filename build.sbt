@@ -13,7 +13,6 @@ lazy val microservice = Project("central-reference-data-eis-stub", file("."))
   )
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings *)
-  .settings(scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")))
   .settings(scalacOptions += "-Wconf:src=routes/.*:s")
 
 lazy val it = project
