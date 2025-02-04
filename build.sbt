@@ -1,7 +1,7 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "3.3.3"
+ThisBuild / scalaVersion := "3.6.3"
 
 lazy val microservice = Project("central-reference-data-eis-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
