@@ -18,7 +18,7 @@ package uk.gov.hmrc.centralreferencedataeisstub.controllers
 
 import play.api.mvc.*
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.centralreferencedataeisstub.config.AppConfig
 
 import java.io.StringReader

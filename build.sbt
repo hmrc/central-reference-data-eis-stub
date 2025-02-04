@@ -1,7 +1,7 @@
 import uk.gov.hmrc.DefaultBuildSettings
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "3.3.3"
+ThisBuild / scalaVersion := "3.6.3"
 
 lazy val microservice = Project("central-reference-data-eis-stub", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
@@ -13,7 +13,6 @@ lazy val microservice = Project("central-reference-data-eis-stub", file("."))
   )
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings *)
-  .settings(scalacOptions := scalacOptions.value.diff(Seq("-Wunused:all")))
   .settings(scalacOptions += "-Wconf:src=routes/.*:s")
 
 lazy val it = project
