@@ -29,8 +29,8 @@ import uk.gov.hmrc.centralreferencedataeisstub.config.AppConfig
 class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
 
   private val fakeRequest = FakeRequest("GET", "/")
-  private val appConfig = app.injector.instanceOf[AppConfig]
-  private val controller = new InboundController(appConfig,Helpers.stubControllerComponents())
+  private val appConfig   = app.injector.instanceOf[AppConfig]
+  private val controller  = new InboundController(appConfig, Helpers.stubControllerComponents())
   given mat: Materializer = app.injector.instanceOf[Materializer]
 
   private val validTestBody: scala.xml.Elem = <MainMessage>
@@ -52,7 +52,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       <MessageSender>CS/RD2</MessageSender>
     </Body>
   </MainMessage>
-  
+
   private val invalid404TestBody: scala.xml.Elem = <MainMessage>
     <Body>
       <TaskIdentifier>780404</TaskIdentifier>
@@ -98,12 +98,12 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.ACCEPT           -> "application/xml",
+            HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION    -> appConfig.bearerToken,
             HeaderNames.X_FORWARDED_HOST -> "some-host",
-            "X-Correlation-Id" -> "some-correlation-id",
-            HeaderNames.DATE -> "some-date"
+            "X-Correlation-Id"           -> "some-correlation-id",
+            HeaderNames.DATE             -> "some-date"
           )
           .withBody(validTestBody)
       )
@@ -114,7 +114,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
@@ -126,8 +126,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/text",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.ACCEPT        -> "application/text",
+            HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
@@ -139,7 +139,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.ACCEPT        -> "application/xml",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
@@ -151,8 +151,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/text",
+            HeaderNames.ACCEPT        -> "application/xml",
+            HeaderNames.CONTENT_TYPE  -> "application/text",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(validTestBody)
@@ -164,11 +164,11 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.ACCEPT        -> "application/xml",
+            HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
-            "X-Correlation-Id" -> "some-correlation-id",
-            HeaderNames.DATE -> "some-date"
+            "X-Correlation-Id"        -> "some-correlation-id",
+            HeaderNames.DATE          -> "some-date"
           )
           .withBody(validTestBody)
       )
@@ -179,11 +179,11 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.ACCEPT           -> "application/xml",
+            HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION    -> appConfig.bearerToken,
             HeaderNames.X_FORWARDED_HOST -> "some-host",
-            HeaderNames.DATE -> "some-date"
+            HeaderNames.DATE             -> "some-date"
           )
           .withBody(validTestBody)
       )
@@ -194,11 +194,11 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.ACCEPT           -> "application/xml",
+            HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION    -> appConfig.bearerToken,
             HeaderNames.X_FORWARDED_HOST -> "some-host",
-            "X-Correlation-Id" -> "some-correlation-id"
+            "X-Correlation-Id"           -> "some-correlation-id"
           )
           .withBody(validTestBody)
       )
@@ -209,12 +209,12 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.ACCEPT           -> "application/xml",
+            HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION    -> appConfig.bearerToken,
             HeaderNames.X_FORWARDED_HOST -> "some-host",
-            "X-Correlation-Id" -> "some-correlation-id",
-            HeaderNames.DATE -> "some-date"
+            "X-Correlation-Id"           -> "some-correlation-id",
+            HeaderNames.DATE             -> "some-date"
           )
           .withBody(validTestBody)
       )
@@ -225,8 +225,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.ACCEPT        -> "application/xml",
+            HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> appConfig.bearerToken
           )
           .withBody(invalidTestBody)
@@ -238,28 +238,28 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.ACCEPT           -> "application/xml",
+            HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION    -> appConfig.bearerToken,
             HeaderNames.X_FORWARDED_HOST -> "some-host",
-            "X-Correlation-Id" -> "some-correlation-id",
-            HeaderNames.DATE -> "some-date"
+            "X-Correlation-Id"           -> "some-correlation-id",
+            HeaderNames.DATE             -> "some-date"
           )
           .withBody(invalid402TestBody)
       )
       status(result) shouldBe PAYMENT_REQUIRED
     }
-    
+
     "return not found if the task id ends with 404 to simulate this return code" in {
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.ACCEPT           -> "application/xml",
+            HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION    -> appConfig.bearerToken,
             HeaderNames.X_FORWARDED_HOST -> "some-host",
-            "X-Correlation-Id" -> "some-correlation-id",
-            HeaderNames.DATE -> "some-date"
+            "X-Correlation-Id"           -> "some-correlation-id",
+            HeaderNames.DATE             -> "some-date"
           )
           .withBody(invalid404TestBody)
       )
@@ -270,12 +270,12 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.ACCEPT           -> "application/xml",
+            HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION    -> appConfig.bearerToken,
             HeaderNames.X_FORWARDED_HOST -> "some-host",
-            "X-Correlation-Id" -> "some-correlation-id",
-            HeaderNames.DATE -> "some-date"
+            "X-Correlation-Id"           -> "some-correlation-id",
+            HeaderNames.DATE             -> "some-date"
           )
           .withBody(invalid503TestBody)
       )
@@ -286,12 +286,12 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> appConfig.bearerToken,
+            HeaderNames.ACCEPT           -> "application/xml",
+            HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
+            HeaderNames.AUTHORIZATION    -> appConfig.bearerToken,
             HeaderNames.X_FORWARDED_HOST -> "some-host",
-            "X-Correlation-Id" -> "some-correlation-id",
-            HeaderNames.DATE -> "some-date"
+            "X-Correlation-Id"           -> "some-correlation-id",
+            HeaderNames.DATE             -> "some-date"
           )
           .withBody(invalid504TestBody)
       )
@@ -302,7 +302,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
+            HeaderNames.ACCEPT       -> "application/xml",
             HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8"
           )
           .withBody(validTestBody)
@@ -315,8 +315,8 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
       val result = controller.submit()(
         fakeRequest
           .withHeaders(
-            HeaderNames.ACCEPT -> "application/xml",
-            HeaderNames.CONTENT_TYPE -> "application/xml; charset=UTF-8",
+            HeaderNames.ACCEPT        -> "application/xml",
+            HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
             HeaderNames.AUTHORIZATION -> "incorrect"
           )
           .withBody(validTestBody)

@@ -31,51 +31,53 @@ import scala.util.{Success, Try}
 import scala.xml.NodeSeq
 
 @Singleton
-class InboundController @Inject()(appConfig:AppConfig, cc: ControllerComponents)
-  extends BackendController(cc):
+class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponents) extends BackendController(cc):
 
-  private val RequiredAccept = "application/xml"
+  private val RequiredAccept      = "application/xml"
   private val RequiredContentType = "application/xml; charset=UTF-8"
 
   def submit(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
     Future.successful(
       if validateBearerToken(request.headers) then
-        if validateHeaders(request.headers) && validateRequestBody(request.body) then
-          expectedReturnValue(request.body)
+        if validateHeaders(request.headers) && validateRequestBody(request.body) then expectedReturnValue(request.body)
         else
           // this line handles the 400 bad request stub
           BadRequest
-      else
-        Unauthorized
+      else Unauthorized
     )
   }
 
   private def validateHeaders(headers: Headers): Boolean =
-    (headers.get(ACCEPT), headers.get(CONTENT_TYPE), headers.get(X_FORWARDED_HOST), headers.get("X-Correlation-Id"), headers.get(DATE)) match
+    (
+      headers.get(ACCEPT),
+      headers.get(CONTENT_TYPE),
+      headers.get(X_FORWARDED_HOST),
+      headers.get("X-Correlation-Id"),
+      headers.get(DATE)
+    ) match
       case (Some(RequiredAccept), Some(RequiredContentType), Some(_), Some(_), Some(_)) => true
-      case a@_ => false
+      case a @ _                                                                        => false
 
-  private def validateBearerToken(headers:Headers): Boolean = 
+  private def validateBearerToken(headers: Headers): Boolean =
     headers.get(AUTHORIZATION).getOrElse(UNAUTHORIZED) == appConfig.bearerToken
 
   private def validateRequestBody(body: NodeSeq) =
     Try {
-      val factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-      val xsd = getClass.getResourceAsStream("/schemas/csrd120main-v1.xsd")
-      val schema = factory.newSchema(new StreamSource(xsd))
+      val factory   = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+      val xsd       = getClass.getResourceAsStream("/schemas/csrd120main-v1.xsd")
+      val schema    = factory.newSchema(new StreamSource(xsd))
       val validator = schema.newValidator()
       validator.validate(new StreamSource(new StringReader(body.toString)))
     } match {
       case Success(_) => true
-      case _ => false
+      case _          => false
     }
 
   private def expectedReturnValue(body: NodeSeq): Result =
     (body \\ "TaskIdentifier").text match {
-      case nullResponse if nullResponse.endsWith("402") => PaymentRequired
-      case notFound if notFound.endsWith("404") => NotFound
+      case nullResponse if nullResponse.endsWith("402")             => PaymentRequired
+      case notFound if notFound.endsWith("404")                     => NotFound
       case serviceUnavailable if serviceUnavailable.endsWith("503") => ServiceUnavailable
-      case gatewayTimeout if gatewayTimeout.endsWith("504") => GatewayTimeout
-      case _ => Accepted
+      case gatewayTimeout if gatewayTimeout.endsWith("504")         => GatewayTimeout
+      case _                                                        => Accepted
     }
-
