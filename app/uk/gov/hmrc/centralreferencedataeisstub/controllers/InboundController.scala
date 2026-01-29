@@ -47,6 +47,16 @@ class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponent
     )
   }
 
+  def submitSubscriptionMessage(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
+    Future.successful(
+      if validateBearerToken(request.headers) then
+        if validateHeaders(request.headers) && validateSubscriptionMessage(request.body) then
+          extractMessageId(request.body)
+        else BadRequest
+      else Unauthorized
+    )
+  }
+
   private def validateHeaders(headers: Headers): Boolean =
     (
       headers.get(ACCEPT),
@@ -71,6 +81,27 @@ class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponent
     } match {
       case Success(_) => true
       case _          => false
+    }
+
+  private def validateSubscriptionMessage(body: NodeSeq) =
+    Try {
+      val factory   = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+      val xsd       = getClass.getResourceAsStream("/schemas/csrd130main-v1.xsd")
+      val schema    = factory.newSchema(new StreamSource(xsd))
+      val validator = schema.newValidator()
+      validator.validate(new StreamSource(new StringReader(body.toString)))
+    } match {
+      case Success(_) => true
+      case _          => false
+    }
+
+  private def extractMessageId(body: NodeSeq): Result =
+    (body \\ "MessageID").text match {
+      case nullResponse if nullResponse.endsWith("402")             => PaymentRequired
+      case notFound if notFound.endsWith("404")                     => NotFound
+      case serviceUnavailable if serviceUnavailable.endsWith("503") => ServiceUnavailable
+      case gatewayTimeout if gatewayTimeout.endsWith("504")         => GatewayTimeout
+      case _                                                        => Accepted
     }
 
   private def expectedReturnValue(body: NodeSeq): Result =

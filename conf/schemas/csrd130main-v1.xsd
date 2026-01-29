@@ -1,0 +1,29 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://xmlns.ec.eu/BusinessObjects/CSRD2/ReferenceDataSubscriptionReceiverCBSServiceType/V4"
+           xmlns="http://xmlns.ec.eu/BusinessObjects/CSRD2/ReferenceDataSubscriptionReceiverCBSServiceType/V4"
+           elementFormDefault="qualified">
+
+    <xs:element name="HMRCReceiveReferenceDataReqMsg">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="MessageHeader">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:choice>
+                    <xs:element name="RDEntityList">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="ErrorReport" type="xs:string"/>
+                </xs:choice>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
