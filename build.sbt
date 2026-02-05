@@ -11,7 +11,6 @@ lazy val microservice = Project("central-reference-data-eis-stub", file("."))
     // suppress warnings in generated routes files
     PlayKeys.playDefaultPort := 7251
   )
-  .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings *)
   .settings(scalacOptions ++= Seq("-Wconf:src=routes/.*:s", "-Wconf:msg=Flag.*repeatedly:s"))
 
