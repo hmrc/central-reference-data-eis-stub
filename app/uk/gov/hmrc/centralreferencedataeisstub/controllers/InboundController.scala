@@ -49,7 +49,7 @@ class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponent
 
   def submitSubscriptionMessage(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
     Future.successful(
-      if validateBearerToken(request.headers) then
+      if validateSubscriptionBearerToken(request.headers) then
         if validateHeaders(request.headers) && validateSubscriptionMessage(request.body) then
           extractMessageId(request.body)
         else BadRequest
@@ -70,6 +70,9 @@ class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponent
 
   private def validateBearerToken(headers: Headers): Boolean =
     headers.get(AUTHORIZATION).contains(s"Bearer ${appConfig.bearerToken}")
+
+  private def validateSubscriptionBearerToken(headers: Headers): Boolean =
+    headers.get(AUTHORIZATION).contains(s"Bearer ${appConfig.subscriptionBearerToken}")
 
   private def validateRequestBody(body: NodeSeq) =
     Try {
