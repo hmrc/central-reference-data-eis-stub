@@ -226,7 +226,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -241,7 +241,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.extractBearerToken}"
           )
           .withBody(validTestBody)
       )
@@ -254,7 +254,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/text",
             HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.extractBearerToken}"
           )
           .withBody(validTestBody)
       )
@@ -266,7 +266,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/xml",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.extractBearerToken}"
           )
           .withBody(validTestBody)
       )
@@ -279,7 +279,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/xml",
             HeaderNames.CONTENT_TYPE  -> "application/text",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.extractBearerToken}"
           )
           .withBody(validTestBody)
       )
@@ -292,7 +292,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/xml",
             HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.extractBearerToken}",
             "X-Correlation-Id"        -> "some-correlation-id",
             HeaderNames.DATE          -> "some-date"
           )
@@ -307,7 +307,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             HeaderNames.DATE             -> "some-date"
           )
@@ -322,7 +322,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id"
           )
@@ -337,7 +337,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -353,7 +353,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/xml",
             HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.extractBearerToken}"
           )
           .withBody(invalidTestBody)
       )
@@ -366,7 +366,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -382,7 +382,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -398,7 +398,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -414,7 +414,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -457,7 +457,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -473,7 +473,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -488,7 +488,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.subscriptionBearerToken}"
           )
           .withBody(validSubscriptionBody)
       )
@@ -501,7 +501,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/text",
             HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.subscriptionBearerToken}"
           )
           .withBody(validSubscriptionBody)
       )
@@ -513,7 +513,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
         fakeRequest
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/xml",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.subscriptionBearerToken}"
           )
           .withBody(validSubscriptionBody)
       )
@@ -526,7 +526,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/xml",
             HeaderNames.CONTENT_TYPE  -> "application/text",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}"
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.subscriptionBearerToken}"
           )
           .withBody(validSubscriptionBody)
       )
@@ -539,7 +539,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT        -> "application/xml",
             HeaderNames.CONTENT_TYPE  -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.subscriptionBearerToken}",
             "X-Correlation-Id"        -> "some-correlation-id",
             HeaderNames.DATE          -> "some-date"
           )
@@ -554,7 +554,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             HeaderNames.DATE             -> "some-date"
           )
@@ -569,7 +569,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id"
           )
@@ -584,7 +584,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -600,7 +600,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -616,7 +616,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -632,7 +632,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
@@ -648,7 +648,7 @@ class InboundControllerSpec extends AnyWordSpec, GuiceOneAppPerSuite, Matchers:
           .withHeaders(
             HeaderNames.ACCEPT           -> "application/xml",
             HeaderNames.CONTENT_TYPE     -> "application/xml; charset=UTF-8",
-            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION    -> s"Bearer ${appConfig.subscriptionBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id"           -> "some-correlation-id",
             HeaderNames.DATE             -> "some-date"
