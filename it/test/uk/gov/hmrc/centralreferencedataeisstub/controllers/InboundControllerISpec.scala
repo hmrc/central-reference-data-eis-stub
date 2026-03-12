@@ -60,7 +60,7 @@ class InboundControllerISpec
           .withHttpHeaders(
             HeaderNames.ACCEPT -> "application/xml",
             HeaderNames.CONTENT_TYPE -> "application/xml;charset=UTF-8",
-            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.bearerToken}",
+            HeaderNames.AUTHORIZATION -> s"Bearer ${appConfig.extractBearerToken}",
             HeaderNames.X_FORWARDED_HOST -> "some-host",
             "X-Correlation-Id" -> "some-correlation-id",
             HeaderNames.DATE -> "some-date"

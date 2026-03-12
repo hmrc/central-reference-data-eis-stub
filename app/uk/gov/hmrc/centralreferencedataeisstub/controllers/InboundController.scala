@@ -69,7 +69,7 @@ class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponent
       case a @ _                                                                        => false
 
   private def validateBearerToken(headers: Headers): Boolean =
-    headers.get(AUTHORIZATION).contains(s"Bearer ${appConfig.bearerToken}")
+    headers.get(AUTHORIZATION).contains(s"Bearer ${appConfig.extractBearerToken}")
 
   private def validateSubscriptionBearerToken(headers: Headers): Boolean =
     headers.get(AUTHORIZATION).contains(s"Bearer ${appConfig.subscriptionBearerToken}")
