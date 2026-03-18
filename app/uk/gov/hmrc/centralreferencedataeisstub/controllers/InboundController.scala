@@ -50,14 +50,14 @@ class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponent
   def submitSubscriptionMessage(): Action[NodeSeq] = Action.async(parse.xml) { implicit request =>
     Future.successful(
       if validateSubscriptionBearerToken(request.headers) then
-        if validateHeaders(request.headers) && validateSubscriptionMessage(request.body) then
+        if validateHeaders(request.headers, RequiredAccept) && validateSubscriptionMessage(request.body) then
           extractMessageId(request.body)
         else BadRequest
       else Unauthorized
     )
   }
 
-  private def validateHeaders(headers: Headers): Boolean =
+  private def validateHeaders(headers: Headers, requiredContentType: String = RequiredContentType): Boolean =
     (
       headers.get(ACCEPT),
       headers.get(CONTENT_TYPE),
@@ -65,8 +65,8 @@ class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponent
       headers.get("X-Correlation-Id"),
       headers.get(DATE)
     ) match
-      case (Some(RequiredAccept), Some(RequiredContentType), Some(_), Some(_), Some(_)) => true
-      case a @ _                                                                        => false
+      case (Some(RequiredAccept), Some(`requiredContentType`), Some(_), Some(_), Some(_)) => true
+      case _                                                                               => false
 
   private def validateBearerToken(headers: Headers): Boolean =
     headers.get(AUTHORIZATION).contains(s"Bearer ${appConfig.extractBearerToken}")
