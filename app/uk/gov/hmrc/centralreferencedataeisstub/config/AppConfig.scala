@@ -22,6 +22,6 @@ import play.api.Configuration
 @Singleton
 class AppConfig @Inject() (config: Configuration):
 
-  val appName: String     = config.get[String]("appName")
-  val extractBearerToken: String = config.get[String]("tokens.extract-bearer-token")
+  val appName: String                 = config.get[String]("appName")
+  val extractBearerToken: String      = config.get[String]("tokens.extract-bearer-token")
   val subscriptionBearerToken: String = config.get[String]("tokens.subscription-bearer-token")
