@@ -66,7 +66,7 @@ class InboundController @Inject() (appConfig: AppConfig, cc: ControllerComponent
       headers.get(DATE)
     ) match
       case (Some(RequiredAccept), Some(`requiredContentType`), Some(_), Some(_), Some(_)) => true
-      case _                                                                               => false
+      case _                                                                              => false
 
   private def validateBearerToken(headers: Headers): Boolean =
     headers.get(AUTHORIZATION).contains(s"Bearer ${appConfig.extractBearerToken}")
